@@ -1,0 +1,17 @@
+module tim (input CLK, output reg bf
+				);
+
+always @(posedge clk) begin
+	
+	cnt <= cnt + 1'b1;
+	
+	if (cnt == 32'd100000000) begin
+		bf <= ~bf;
+		cnt <= 1'b0;
+	end
+	
+	
+	
+end
+
+endmodule

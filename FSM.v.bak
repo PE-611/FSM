@@ -1,0 +1,15 @@
+module FSM (input clk, button,
+				output reg led1, led2
+				)
+				
+				
+
+always @(posedge clk) begin
+	led1 <= 1'b1;
+end				
+				
+				
+				
+				
+endmodule
+

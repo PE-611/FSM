@@ -1,0 +1,104 @@
+module FSM (input clk, button, reset,
+				output led1, led2
+				);
+
+
+reg [2:0] state;	
+reg [2:0] next_state;
+
+reg [32:0] cnt;
+reg [32:0] cnt1;
+reg div_clk;
+
+reg bf;
+
+localparam IDLE 			= 3'd0;
+localparam LED_1_ON 		= 3'd1;
+localparam LED_2_ON		= 3'd2;
+localparam ALL_LED_OFF 	= 3'd3;	
+
+reg tsfl;
+initial tsfl <= 1'b1;
+
+assign led1 = (state == LED_1_ON) ? 1'b1 : 1'b0;
+assign led2 = (state == LED_2_ON) ? 1'b1 : 1'b0;
+
+always @* 	
+		
+		case (state)
+			
+			IDLE:
+					
+					if (bf == 1'b1) 
+						next_state <= LED_1_ON;
+					else
+						next_state <= IDLE;
+			
+			LED_1_ON:
+			
+					if (bf == 1'b1)
+						next_state <= LED_2_ON;
+					else
+						next_state <= LED_1_ON;
+		
+			LED_2_ON:
+			
+					if (bf == 1'b1)
+						next_state <= ALL_LED_OFF;
+					else
+						next_state <= LED_2_ON;						
+									
+			ALL_LED_OFF:
+			
+					if (bf == 1'b1) 
+						next_state <= IDLE;
+					else
+						next_state <= ALL_LED_OFF;
+		
+			default:
+					
+						next_state <= IDLE;
+		
+		endcase
+	
+
+
+always @(posedge div_clk or negedge bf) begin //
+
+	if(!bf) 
+		state <= IDLE;
+	else
+		state <= next_state;
+end
+
+
+
+always @(posedge clk) begin
+	
+	if (button == 1'b0) begin
+		bf <= 1'b1;
+	end
+	
+	if (bf == 1'b1) begin
+		cnt <= cnt + 1'b1;
+	end
+	
+	if (cnt == 32'd100000000) begin
+		cnt <= 1'b0;
+		bf <= 1'b0;
+	end	
+
+	cnt1 = cnt1 + 1'b1;
+	
+	if (cnt1 == 32'd5000000) begin
+		cnt1 <= 1'b0;
+		div_clk <= ~div_clk;
+	end
+
+	
+	
+end
+
+				
+				
+endmodule

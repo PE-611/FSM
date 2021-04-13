@@ -1,0 +1,7 @@
+
+State Machine - |FSM|state
+Name state.ALL_LED_OFF state.LED_2_ON state.LED_1_ON state.IDLE 
+state.IDLE 0 0 0 0 
+state.LED_1_ON 0 0 1 1 
+state.LED_2_ON 0 1 0 1 
+state.ALL_LED_OFF 1 0 0 1 
